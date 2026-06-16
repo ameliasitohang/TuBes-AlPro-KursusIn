@@ -1,22 +1,22 @@
 package main
 import "fmt"
 
-const NMax = 1000 // Membatasi maksimal 1000 pendaftar
+const NMax = 1000 // Membatasi maksimal 1000 pbatasKananaftar
 
 type Peserta struct {
-	ID            int
-	Nama          string
+	ID            int
+	Nama          string
 	TanggalDaftar string
-	BidangMinat   string
+	BidangMinat   string
 }
 type TabPeserta struct {
-	Data  [NMax]Peserta
+	Data  [NMax]Peserta
 	Count int
 }
 func kecilBesar(s string) string {		// Mengubah teks menjadi huruf kecil semua menggunakan ASCII untuk kemudahan komparasi	
 	var i int
 	var result string
-	for i = 0; i < len(s); i = i + 1 {
+	for i = 0; i < len(s); i++ {
 		if s[i] >= 'A' && s[i] <= 'Z' {
 			result += string(s[i] + 32)
 		} else {
@@ -25,9 +25,9 @@ func kecilBesar(s string) string {		// Mengubah teks menjadi huruf kecil semua m
 	}
 	return result
 }
-func kecilBesarID(t TabPeserta, id int) int {	// Mencari indeks posisi ID berada
+func cariID(t TabPeserta, id int) int {	// Mencari indeks posisi ID berada
 	var i int
-	for i = 0; i < t.Count; i = i + 1 {
+	for i = 0; i < t.Count; i++ {
 		if t.Data[i].ID == id {
 			return i
 		}
@@ -39,7 +39,7 @@ func tambahPeserta(t *TabPeserta) {		// Menambahkan data Peserta
 		fmt.Println("Kapasitas pendaftar penuh.")
 	} else {
 		fmt.Println("\n-- Tambah Peserta Baru --")
-		fmt.Print("ID Pendaftaran: ")
+		fmt.Print("ID Pendaftar: ")
 		fmt.Scan(&t.Data[t.Count].ID)
 		fmt.Print("Nama Lengkap (tanpa spasi/gunakan_underscore): ")
 		fmt.Scan(&t.Data[t.Count].Nama)
@@ -58,7 +58,7 @@ func ubahPeserta(t *TabPeserta) {		// Mengubah data Peserta
 	fmt.Print("\nMasukkan ID Peserta yang ingin diubah: ")
 	fmt.Scan(&id)
 
-	idx = kecilBesarID(*t, id)
+	idx = cariID(*t, id)
 	if idx != -1 {
 		fmt.Print("Nama Baru (tanpa spasi): ")
 		fmt.Scan(&t.Data[idx].Nama)
@@ -77,7 +77,7 @@ func hapusPeserta(t *TabPeserta) {	// Menghapus data peserta
 	fmt.Print("\nMasukkan ID Peserta yang ingin dihapus: ")
 	fmt.Scan(&id)
 
-	idx = kecilBesarID(*t, id)
+	idx = cariID(*t, id)
 	if idx != -1 {
 		for i = idx; i < t.Count-1; i = i + 1 {
 			t.Data[i] = t.Data[i+1]
@@ -88,14 +88,13 @@ func hapusPeserta(t *TabPeserta) {	// Menghapus data peserta
 		fmt.Println("Peserta dengan ID tersebut tidak ditemukan.")
 	}
 }
-func cariBidangSequential(t TabPeserta, minat string) {	
+func cariBidangSequential(t TabPeserta, minat string) {		//mencari bidang minat peserta secara Sequential	
 	var ditemukan bool = false
 	target := kecilBesar(minat)
 
 	fmt.Printf("\n[Sequential Search] Hasil pencarian untuk bidang minat '%s':\n", target)
 	for i := 0; i < t.Count; i = i + 1 {
 		if kecilBesar(t.Data[i].BidangMinat) == target {
-			// Lebar ID diubah jadi %-15d dan Minat ditambahkan ke output
 			fmt.Printf("- ID: %-15d | Nama: %-20s | Minat: %-15s | Tanggal: %-10s\n", t.Data[i].ID, t.Data[i].Nama, kecilBesar(t.Data[i].BidangMinat), t.Data[i].TanggalDaftar)
 			ditemukan = true
 		}
@@ -106,7 +105,7 @@ func cariBidangSequential(t TabPeserta, minat string) {
 }
 func sortBidangMinat(t *TabPeserta) {		// Mengurutkan Bidang Minat sebelum Binary Search menggunakan sorting
 	var i int
-	for i = 1; i < t.Count; i = i + 1 {
+	for i = 1; i < t.Count; i++ {
 		temp := t.Data[i]
 		j := i - 1
 		for j >= 0 && kecilBesar(t.Data[j].BidangMinat) > kecilBesar(temp.BidangMinat) {
@@ -117,21 +116,21 @@ func sortBidangMinat(t *TabPeserta) {		// Mengurutkan Bidang Minat sebelum Binar
 	}
 }
 
-func cariBidangBinary(t *TabPeserta, minat string) {
+func cariBidangBinary(t *TabPeserta, minat string) {		//mencari bidang minat peserta menggunakan Binary
 	sortBidangMinat(t)
 	target := kecilBesar(minat)
 	left := 0
-	right := t.Count - 1 
+	right := t.Count - 1 
 	idxMatch := -1
-	ketemu := false 
+	ketemu := false 
 
 	for left <= right && !ketemu {
 		mid := (left + right) / 2
-		midVal := kecilBesar(t.Data[mid].BidangMinat)
+		midVal := kecilBesar(t.Data[mid].BidangMinat)		//midVal = mid Value(nilai tengah)
 		
 		if midVal == target {
 			idxMatch = mid
-			ketemu = true 
+			ketemu = true 
 		} else if midVal < target {
 			left = mid + 1
 		} else {
@@ -140,28 +139,27 @@ func cariBidangBinary(t *TabPeserta, minat string) {
 	}
 	if idxMatch != -1 {
 		fmt.Printf("\n[Binary Search] Hasil pencarian untuk bidang minat '%s':\n", target)
-		start := idxMatch 
-		for start > 0 && kecilBesar(t.Data[start-1].BidangMinat) == target {
-			start = start - 1
+		batasKiri := idxMatch 
+		for batasKiri > 0 && kecilBesar(t.Data[batasKiri-1].BidangMinat) == target {
+			batasKiri = batasKiri - 1
 		}
-		end := idxMatch 
-		for end < t.Count-1 && kecilBesar(t.Data[end+1].BidangMinat) == target {
-			end = end + 1
+		batasKanan := idxMatch 
+		for batasKanan < t.Count-1 && kecilBesar(t.Data[batasKanan+1].BidangMinat) == target {
+			batasKanan = batasKanan + 1
 		}
-		for i := start; i <= end; i = i + 1 {
-			// Lebar ID diubah jadi %-15d dan Minat ditambahkan ke output
+		for i := batasKiri; i <= batasKanan; i = i + 1 {
 			fmt.Printf("- ID: %-15d | Nama: %-20s | Minat: %-15s | Tanggal: %-10s\n", t.Data[i].ID, t.Data[i].Nama, kecilBesar(t.Data[i].BidangMinat), t.Data[i].TanggalDaftar)
 		}
 	} else {
 		fmt.Println("Tidak ada peserta di bidang minat tersebut.")
 	}
 }
-func selectionSortID(t *TabPeserta, isAscending bool) {		// Mengurutkan ID peserta (Selection Sort)
+func selectionSortID(t *TabPeserta, Ascending bool) {		// Mengurutkan ID peserta (Selection Sort)
 	var i, j int
-	for i = 0; i < t.Count-1; i = i + 1 {
+	for i = 0; i < t.Count-1; i++ {
 		idx := i
-		for j = i + 1; j < t.Count; j = j + 1 {
-			if isAscending {
+		for j = i + 1; j < t.Count; j++ {
+			if Ascending {
 				if t.Data[j].ID < t.Data[idx].ID {
 					idx = j
 				}
@@ -176,12 +174,12 @@ func selectionSortID(t *TabPeserta, isAscending bool) {		// Mengurutkan ID peser
 		t.Data[idx] = temp
 	}
 }
-func insertionSortID(t *TabPeserta, isAscending bool) {		// Mengurutkan ID peserta (Insertion Sort)
+func insertionSortID(t *TabPeserta, Ascending bool) {		// Mengurutkan ID peserta (Insertion Sort)
 	var i int
-	for i = 1; i < t.Count; i = i + 1 {
+	for i = 1; i < t.Count; i++ {
 		temp := t.Data[i]
 		j := i - 1
-		if isAscending {
+		if Ascending {
 			for j >= 0 && t.Data[j].ID > temp.ID {
 				t.Data[j+1] = t.Data[j]
 				j = j - 1
@@ -196,21 +194,21 @@ func insertionSortID(t *TabPeserta, isAscending bool) {		// Mengurutkan ID peser
 	}
 }
 
-func tampilkanStatistik(t TabPeserta) {
-	fmt.Println("\n--- Statistik KursusIn ---")
-	fmt.Printf("Total Peserta Aktif: %d orang\n", t.Count)
-
+func tampilkanStatistik(t TabPeserta) {		//menampilkan seluruh statis peserta yg telah terdaftar
 	var listMinat [NMax]string
 	var listJumlah [NMax]int
 	var i int
 	var ada bool
 	rekapCount := 0
+	
+	fmt.Println("\n--- Statistik KursusIn ---")
+	fmt.Printf("Total Peserta Aktif: %d orang\n", t.Count)
 
-	for i = 0; i < t.Count; i = i + 1 {
+	for i = 0; i < t.Count; i++ {
 		minatSaatIni := kecilBesar(t.Data[i].BidangMinat)
 		ada = false
 
-		for j := 0; j < rekapCount && !ada; j = j + 1 {
+		for j := 0; j < rekapCount && !ada; j++ {
 			if listMinat[j] == minatSaatIni {
 				listJumlah[j] = listJumlah[j] + 1
 				ada = true
@@ -222,21 +220,19 @@ func tampilkanStatistik(t TabPeserta) {
 			rekapCount = rekapCount + 1
 		}
 	}
-	fmt.Println("Jumlah Pendaftar per Bidang Minat:")
-	for i := 0; i < rekapCount; i = i + 1 {
+	fmt.Println("Jumlah pendaftar per Bidang Minat:")
+	for i := 0; i < rekapCount; i++ {
 		fmt.Printf("- %-15s: %d orang\n", listMinat[i], listJumlah[i])
 	}
 }
 
-func tampilkanSemua(t TabPeserta) {
+func tampilkanSemua(t TabPeserta) {		//menampilkan semua data peserta yg telah terdaftar
 	if t.Count == 0 {
 		fmt.Println("Belum ada data peserta yang terdaftar.")
 	} else {
-		// Garis diperpanjang dan ID diberi jatah 15 spasi
 		fmt.Printf("%-15s | %-20s | %-18s | %-15s\n", "ID", "Nama", "Bidang Minat", "Tanggal Daftar")
 		fmt.Println("-------------------------------------------------------------------------------")
-		for i := 0; i < t.Count; i = i + 1 {
-			// Memanggil kecilBesar() pada BidangMinat agar tampilannya seragam saat dicetak
+		for i := 0; i < t.Count; i++ {
 			fmt.Printf("%-15d | %-20s | %-18s | %-15s\n", t.Data[i].ID, t.Data[i].Nama, kecilBesar(t.Data[i].BidangMinat), t.Data[i].TanggalDaftar)
 		}
 		fmt.Println("-------------------------------------------------------------------------------")
@@ -303,18 +299,18 @@ func main() {
 
 				if metodeSort == "1" || metodeSort == "2" {
 					fmt.Println("\n-- Arah Pengurutan --")
-					fmt.Println("1. Ascending (Kecil ke Besar)")
+					fmt.Println("1. Ascending(Kecil ke Besar)")
 					fmt.Println("2. Descending (Besar ke Kecil)")
 					fmt.Print("Pilih arah (1/2): ")
 					fmt.Scan(&arahSort)
 
-					isAscending := (arahSort == "1")
+					Ascending := (arahSort == "1")
 
 					if metodeSort == "1" {
-						selectionSortID(&tabel, isAscending)
+						selectionSortID(&tabel, Ascending)
 						fmt.Println("Berhasil diurutkan dengan Selection Sort.")
 					} else {
-						insertionSortID(&tabel, isAscending)
+						insertionSortID(&tabel, Ascending)
 						fmt.Println("Berhasil diurutkan dengan Insertion Sort.")
 					}
 					tampilkanSemua(tabel)
