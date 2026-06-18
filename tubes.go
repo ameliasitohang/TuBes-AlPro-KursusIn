@@ -1,7 +1,7 @@
 package main
 import "fmt"
 
-const NMax = 1000 // Membatasi maksimal 1000 pbatasKananaftar
+const NMAX = 1000 // Membatasi maksimal 1000 pendaftar
 
 type Peserta struct {
 	ID            int
@@ -10,7 +10,7 @@ type Peserta struct {
 	BidangMinat   string
 }
 type TabPeserta struct {
-	Data  [NMax]Peserta
+	Data  [NMAX]Peserta
 	Count int
 }
 func kecilBesar(s string) string {		// Mengubah teks menjadi huruf kecil semua menggunakan ASCII untuk kemudahan komparasi	
@@ -23,7 +23,7 @@ func kecilBesar(s string) string {		// Mengubah teks menjadi huruf kecil semua m
 			result += string(s[i])
 		}
 	}
-	return result
+	return result  
 }
 func cariID(t TabPeserta, id int) int {	// Mencari indeks posisi ID berada
 	var i int
@@ -35,11 +35,11 @@ func cariID(t TabPeserta, id int) int {	// Mencari indeks posisi ID berada
 	return -1
 }
 func tambahPeserta(t *TabPeserta) {		// Menambahkan data Peserta
-	if t.Count >= NMax {
+	if t.Count >= NMAX {
 		fmt.Println("Kapasitas pendaftar penuh.")
 	} else {
 		fmt.Println("\n-- Tambah Peserta Baru --")
-		fmt.Print("ID Pendaftar: ")
+		fmt.Print("ID pendaftar: ")
 		fmt.Scan(&t.Data[t.Count].ID)
 		fmt.Print("Nama Lengkap (tanpa spasi/gunakan_underscore): ")
 		fmt.Scan(&t.Data[t.Count].Nama)
@@ -48,9 +48,9 @@ func tambahPeserta(t *TabPeserta) {		// Menambahkan data Peserta
 		fmt.Print("Bidang Minat: ")
 		fmt.Scan(&t.Data[t.Count].BidangMinat)
 
-		t.Count = t.Count + 1
 		fmt.Println("Data peserta berhasil ditambahkan!")
 	}
+	t.Count = t.Count + 1
 }
 
 func ubahPeserta(t *TabPeserta) {		// Mengubah data Peserta
@@ -79,7 +79,7 @@ func hapusPeserta(t *TabPeserta) {	// Menghapus data peserta
 
 	idx = cariID(*t, id)
 	if idx != -1 {
-		for i = idx; i < t.Count-1; i = i + 1 {
+		for i = idx; i < t.Count-1; i++ {
 			t.Data[i] = t.Data[i+1]
 		}
 		t.Count = t.Count - 1
@@ -93,7 +93,7 @@ func cariBidangSequential(t TabPeserta, minat string) {		//mencari bidang minat 
 	target := kecilBesar(minat)
 
 	fmt.Printf("\n[Sequential Search] Hasil pencarian untuk bidang minat '%s':\n", target)
-	for i := 0; i < t.Count; i = i + 1 {
+	for i := 0; i < t.Count; i++ {
 		if kecilBesar(t.Data[i].BidangMinat) == target {
 			fmt.Printf("- ID: %-15d | Nama: %-20s | Minat: %-15s | Tanggal: %-10s\n", t.Data[i].ID, t.Data[i].Nama, kecilBesar(t.Data[i].BidangMinat), t.Data[i].TanggalDaftar)
 			ditemukan = true
@@ -147,7 +147,7 @@ func cariBidangBinary(t *TabPeserta, minat string) {		//mencari bidang minat pes
 		for batasKanan < t.Count-1 && kecilBesar(t.Data[batasKanan+1].BidangMinat) == target {
 			batasKanan = batasKanan + 1
 		}
-		for i := batasKiri; i <= batasKanan; i = i + 1 {
+		for i := batasKiri; i <= batasKanan; i++  {
 			fmt.Printf("- ID: %-15d | Nama: %-20s | Minat: %-15s | Tanggal: %-10s\n", t.Data[i].ID, t.Data[i].Nama, kecilBesar(t.Data[i].BidangMinat), t.Data[i].TanggalDaftar)
 		}
 	} else {
@@ -195,8 +195,8 @@ func insertionSortID(t *TabPeserta, Ascending bool) {		// Mengurutkan ID peserta
 }
 
 func tampilkanStatistik(t TabPeserta) {		//menampilkan seluruh statis peserta yg telah terdaftar
-	var listMinat [NMax]string
-	var listJumlah [NMax]int
+	var listMinat [NMAX]string
+	var listJumlah [NMAX]int
 	var i int
 	var ada bool
 	rekapCount := 0
